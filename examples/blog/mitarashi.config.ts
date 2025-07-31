@@ -8,8 +8,12 @@ export default defineConfig({
   },
 
   paths: {
-    contentDir: "posts",
+    postsDir: "posts",
     outputDir: "dist",
     templateDir: "templates/minimal",
   },
+
+  options: {
+    cleanOutputDir: true,
+  }
 });

@@ -6,8 +6,12 @@ export interface MitarashiConfig {
   };
 
   paths: {
-    contentDir: string;
+    postsDir: string;
     outputDir: string;
     templateDir: string;
   };
+
+  options: {
+    cleanOutputDir: boolean;
+  }
 }
