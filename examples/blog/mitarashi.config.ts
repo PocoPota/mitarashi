@@ -13,6 +13,11 @@ export default defineConfig({
     templateDir: "templates/minimal",
   },
 
+  theme: {
+    layout: "layout.html",
+    post: "post.html"
+  },
+
   options: {
     cleanOutputDir: true,
   }

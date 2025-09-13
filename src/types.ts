@@ -11,6 +11,11 @@ export interface MitarashiConfig {
     templateDir: string;
   };
 
+  theme:{
+    layout: string;
+    post : string;
+  }
+
   options: {
     cleanOutputDir: boolean;
   }
