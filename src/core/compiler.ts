@@ -3,7 +3,7 @@ import generator from "./generator";
 import path from "path";
 import fs from "fs/promises";
 import { loadCondig } from "./loadConfig";
-import { findMarkdownFiles } from "./findMarkdownFiles";
+import { finder } from "./finder";
 
 export async function buildSite(rootDir: string){
   // 設定読み込み
@@ -17,7 +17,7 @@ export async function buildSite(rootDir: string){
 
   // 全markdownファイルの取得
   const postsDir = path.resolve(rootDir, config.paths.postsDir);
-  const markdownFiles = await findMarkdownFiles(postsDir);
+  const markdownFiles = await finder(postsDir);
 
   // markdownファイルの処理
   // トップページの処理
