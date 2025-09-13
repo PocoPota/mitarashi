@@ -1,6 +1,6 @@
 export interface MitarashiConfig {
   site: {
-    title: string;
+    siteTitle: string;
     description?: string;
     baseUrl?: string;
   };
