@@ -32,7 +32,6 @@ export async function pageBuilder(markdownPath: string, config: MitarashiConfig,
       .replaceAll('{{ siteTitle }}', config.site.siteTitle || 'my site')
       .replaceAll('{{ slot }}', articleReplaced);
 
-      console.log(pageHtml);
     // 出力
     const outputRoot = path.resolve(rootDir, config.paths.outputDir);
     const postsDir = path.resolve(rootDir, config.paths.postsDir);
