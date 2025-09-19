@@ -24,13 +24,13 @@ export async function pageBuilder(markdownPath: string, config: MitarashiConfig,
 
     // データ差し込み
     const articleReplaced = articleTemplate
-      .replace('{{ title }}', title || 'Untitled')
-      .replace('{{ date }}', date || 'Undated')
-      .replace('{{ content }}', contentHtml || '');
+      .replaceAll('{{ title }}', title || 'Untitled')
+      .replaceAll('{{ date }}', date || 'Undated')
+      .replaceAll('{{ content }}', contentHtml || '');
 
     const pageHtml = layoutTemplate
-      .replace('{{ siteTitle }}', config.site.siteTitle || 'my site')
-      .replace('{{ slot }}', articleReplaced);
+      .replaceAll('{{ siteTitle }}', config.site.siteTitle || 'my site')
+      .replaceAll('{{ slot }}', articleReplaced);
 
       console.log(pageHtml);
     // 出力
