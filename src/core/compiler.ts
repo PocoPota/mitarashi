@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs/promises";
 import { loadCondig } from "./loadConfig";
 import { finder } from "./finder";
+import { pageBuilder } from "./pageBuilder";
 
 export async function buildSite(rootDir: string){
   // 設定読み込み
@@ -20,9 +21,13 @@ export async function buildSite(rootDir: string){
   const markdownFiles = await finder(postsDir);
 
   // markdownファイルの処理
-  // トップページの処理
-}
+  await Promise.all(markdownFiles.map(async (markdownFile)=>{
+    try{
+      await pageBuilder(markdownFile, config, rootDir);
+    }catch(e){
+      throw new Error(`ページの生成に失敗しました: ${e}`);
+    }
+  }));
 
-export function parseMarkdown(markdown: string): string {
-  return generator(parser(markdown));
+  // トップページの処理
 }
