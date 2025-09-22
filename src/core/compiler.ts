@@ -1,5 +1,3 @@
-import parser from "./parser";
-import generator from "./generator";
 import path from "path";
 import fs from "fs/promises";
 import { loadCondig } from "./loadConfig";
