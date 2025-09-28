@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import { loadCondig } from "./loadConfig";
 import { finder } from "./finder";
 import { pageBuilder } from "./pageBuilder";
+import { indexBuilder } from "./indexBuilder";
 
 export async function buildSite(rootDir: string) {
   // 設定読み込み
@@ -29,6 +30,6 @@ export async function buildSite(rootDir: string) {
     })
   );
 
-  // トップページの処理
-  
+  // トップページの生成
+  await indexBuilder(markdownFiles, config, rootDir);
 }
