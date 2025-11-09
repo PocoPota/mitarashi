@@ -2,18 +2,14 @@
   "compilerOptions": {
     "target": "es2021",            // 最新JavaScript出力
     "module": "ESNext",            // ESM形式で出力
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "outDir": "./dist",            // ビルド出力先
     "declaration": true,           // .d.tsファイルを生成
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",                // 相対パス解決に便利
-    "paths": {
-      "*": ["src/*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]
 }

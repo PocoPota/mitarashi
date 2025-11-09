@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { buildSite } from "../dist/core/compiler.js";
 import path from "path";
 
