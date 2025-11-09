@@ -11,9 +11,9 @@ export interface MitarashiConfig {
     templateDir: string;
   };
 
-  theme:{
+  theme: {
     layout: string;
-    post : string;
+    post: string;
   }
 
   options: {

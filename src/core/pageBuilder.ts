@@ -40,6 +40,6 @@ export async function pageBuilder(markdownPath: string, config: MitarashiConfig,
     await fs.mkdir(path.dirname(outputPath), {recursive: true});
     await fs.writeFile(outputPath, pageHtml, 'utf-8');
   }catch(e){
-    throw new Error(`Makrodnwファイルの読み込みに失敗しました: ${e}`);
+    throw new Error(`Markdownファイルの読み込みに失敗しました: ${e}`);
   }
 }
