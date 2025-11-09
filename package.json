@@ -1,6 +1,9 @@
 {
   "name": "mitarashi",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "シンプルな静的サイトジェネレーター",
   "homepage": "https://github.com/PocoPota/mitarashi#readme",
   "bugs": {
@@ -24,6 +27,12 @@
   "bin": {
     "mitarashi": "./bin/cli.js"
   },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx scripts/dev.ts",
@@ -35,7 +44,6 @@
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
-    "path": "^0.12.7",
     "tsx": "^4.20.3"
   }
 }
