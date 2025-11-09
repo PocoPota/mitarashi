@@ -1,7 +1,7 @@
 {
   "name": "mitarashi",
   "version": "0.1.0",
-  "description": "",
+  "description": "シンプルな静的サイトジェネレーター",
   "homepage": "https://github.com/PocoPota/mitarashi#readme",
   "bugs": {
     "url": "https://github.com/PocoPota/mitarashi/issues"
