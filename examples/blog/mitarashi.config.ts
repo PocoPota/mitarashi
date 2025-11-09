@@ -1,4 +1,4 @@
-import { defineConfig } from "../../src/config";
+import { defineConfig } from "../../dist/config.js";
 
 export default defineConfig({
   site: {
@@ -10,7 +10,7 @@ export default defineConfig({
   paths: {
     postsDir: "posts",
     outputDir: "dist",
-    templateDir: "templates/minimal",
+    templateDir: "../../templates/minimal",
   },
 
   theme: {

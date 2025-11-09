@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import matter from "gray-matter";
-import type { MitarashiConfig } from "types";
+import type { MitarashiConfig } from "../types";
 
 export async function indexBuilder(markdownFiles: string[],config: MitarashiConfig, rootDir: string) {
   const outputRoot = path.resolve(rootDir, config.paths.outputDir);

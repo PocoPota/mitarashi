@@ -1,5 +1,5 @@
 import path from "path";
-import { MitarashiConfig } from "types";
+import { MitarashiConfig } from "../types";
 import { pathToFileURL } from "url";
 
 export async function loadConfig(rootDir: string): Promise<MitarashiConfig> {

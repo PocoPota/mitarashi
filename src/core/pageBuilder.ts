@@ -3,7 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import parser from "./parser";
 import generator from "./generator";
-import type { MitarashiConfig } from "types";
+import type { MitarashiConfig } from "../types";
 
 export async function pageBuilder(markdownPath: string, config: MitarashiConfig, rootDir: string){
   try{

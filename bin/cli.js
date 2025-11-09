@@ -1,3 +1,5 @@
+#!/usr/bin/env -S node --import tsx/esm
+
 import { buildSite } from "../dist/core/compiler.js";
 import path from "path";
 
