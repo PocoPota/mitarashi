@@ -36,6 +36,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx scripts/dev.ts",
+    "debug": "tsx scripts/debug.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
