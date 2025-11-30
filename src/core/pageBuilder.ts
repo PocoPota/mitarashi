@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
 import parser from "./parser";
+import astTransformer from "./astTransformer";
 import generator from "./generator";
 import type { MitarashiConfig } from "../types";
 
@@ -11,7 +12,10 @@ export async function pageBuilder(markdownPath: string, config: MitarashiConfig,
     const parsed = matter(markdown);
 
     // 記事情報
-    const contentHtml = generator(parser(parsed.content));
+    const ast = parser(parsed.content);
+    const transformedAst = astTransformer(ast);
+    const contentHtml = generator(transformedAst);
+    // const contentHtml = generator(parser(parsed.content));
     const title = parsed.data.title;
     const date = parsed.data.date;
 
