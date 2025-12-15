@@ -1,0 +1,29 @@
+[
+  {
+    "rule_type": "inline",
+    "pattern": "/::(.+?)::/",
+    "toNode": {
+      "type": "custom_inline"
+    },
+    "template": "<span class='custom-inline'>{{$0}}</span>"
+  },
+  {
+    "rule_type": "block",
+    "start": ":::",
+    "end": ":::",
+    "toNode": {
+      "type": "comment_block"
+    },
+    "template": "<div class='comment-block'>{{$0}}</div>"
+  },
+  {
+    "rule_type": "block",
+    "start": "<<<",
+    "end": ">>>",
+    "meta": "info",
+    "toNode": {
+      "type": "info_block"
+    },
+    "template": "<div class='info-block'><strong>{{$0}}</strong><div>{{content}}</div></div>"
+  }
+]

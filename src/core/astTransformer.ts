@@ -1,40 +1,38 @@
 import type { Token } from "./modules/token";
+import type { MitarashiConfig } from "../types";
+import type { CustomSyntaxRule } from "../types";
+import fs from "fs";
+import path from "path";
 
-const inline_rules = [
-  {
-    rule_type: "inline",
-    pattern: /::(.+?)::/,
-    toNode: {
-      type: "custom_inline",
-    },
-  },
-];
+const transformer = (
+  ast: Array<Token>,
+  rootDir: string,
+  config: MitarashiConfig
+) => {
+  // ルールの定義・分類
+  const rules_file = config.paths.customSyntaxFile
+    ? path.resolve(rootDir, config.paths.customSyntaxFile)
+    : null;
+  const rules_data: Array<CustomSyntaxRule> = rules_file
+    ? JSON.parse(fs.readFileSync(rules_file, "utf-8"))
+    : [];
 
-const block_rules = [
-  {
-    rule_type: "block",
-    start: ":::",
-    end: ":::",
-    toNode: {
-      type: "custom_block",
-    },
-  },
-  {
-    rule_type: "block",
-    start: "<<<",
-    end: ">>>",
-    toNode: {
-      type: "custom_meta_block",
-    },
-  },
-];
+  const inline_rules = rules_data.filter(
+    (rule): rule is Extract<CustomSyntaxRule, { rule_type: "inline" }> =>
+      rule.rule_type === "inline"
+  );
 
-const transformer = (ast: Array<Token>) => {
+  const block_rules = rules_data.filter(
+    (rule): rule is Extract<CustomSyntaxRule, { rule_type: "block" }> =>
+      rule.rule_type === "block"
+  );
+
   const transformInlineRules = (node: Token): Array<Token> => {
     if (node.type !== "text" || !node.value) return [node];
 
     for (const rule of inline_rules) {
-      const isMatch = node.value.match(rule.pattern);
+      const pattern = new RegExp(rule.pattern);
+      const isMatch = node.value.match(pattern);
       if (isMatch) {
         const before = node.value.slice(0, isMatch.index);
         const content = isMatch[1];
@@ -49,15 +47,22 @@ const transformer = (ast: Array<Token>) => {
           type: rule.toNode.type,
           children: [{ type: "text", value: content }],
         });
-        if (after) tokens.push(...transformInlineRules({ type: "text", value: after }));
+        if (after)
+          tokens.push(...transformInlineRules({ type: "text", value: after }));
         return tokens;
       }
     }
     return [node];
   };
 
-  const transformBlockRules = (node: Token): { matched: boolean; nodes: Array<Token> } => {
-    if (node.type !== "paragraph" || !node.children || node.children.length === 0) {
+  const transformBlockRules = (
+    node: Token
+  ): { matched: boolean; nodes: Array<Token> } => {
+    if (
+      node.type !== "paragraph" ||
+      !node.children ||
+      node.children.length === 0
+    ) {
       return { matched: false, nodes: [] };
     }
 
@@ -82,7 +87,11 @@ const transformer = (ast: Array<Token>) => {
           }
         }
         // それ以降でvalue=rule.endの要素を見つける
-        else if (child.type === "text" && child.value === rule.end && startIndex !== -1) {
+        else if (
+          child.type === "text" &&
+          child.value === rule.end &&
+          startIndex !== -1
+        ) {
           endIndex = i;
           break;
         }
@@ -98,15 +107,24 @@ const transformer = (ast: Array<Token>) => {
         let afterBlock = children.slice(endIndex + 1);
 
         // beforeBlockの末尾のsoftbreakを削除
-        while (beforeBlock.length > 0 && beforeBlock[beforeBlock.length - 1].type === "softbreak") {
+        while (
+          beforeBlock.length > 0 &&
+          beforeBlock[beforeBlock.length - 1].type === "softbreak"
+        ) {
           beforeBlock = beforeBlock.slice(0, -1);
         }
 
         // blockContentの先頭と末尾のsoftbreakを削除
-        while (blockContent.length > 0 && blockContent[0].type === "softbreak") {
+        while (
+          blockContent.length > 0 &&
+          blockContent[0].type === "softbreak"
+        ) {
           blockContent = blockContent.slice(1);
         }
-        while (blockContent.length > 0 && blockContent[blockContent.length - 1].type === "softbreak") {
+        while (
+          blockContent.length > 0 &&
+          blockContent[blockContent.length - 1].type === "softbreak"
+        ) {
           blockContent = blockContent.slice(0, -1);
         }
 
@@ -119,13 +137,13 @@ const transformer = (ast: Array<Token>) => {
         if (beforeBlock.length > 0) {
           result.push({
             type: "paragraph",
-            children: transformer(beforeBlock)
+            children: transformer(beforeBlock, rootDir, config),
           });
         }
 
         const blockNode: Token = {
           type: rule.toNode.type,
-          children: transformer(blockContent)
+          children: transformer(blockContent, rootDir, config),
         };
         if (metaValue !== undefined) {
           blockNode.meta = metaValue;
@@ -136,9 +154,9 @@ const transformer = (ast: Array<Token>) => {
         if (afterBlock.length > 0) {
           const remainingNode: Token = {
             type: "paragraph",
-            children: afterBlock
+            children: afterBlock,
           };
-          result.push(...transformer([remainingNode]));
+          result.push(...transformer([remainingNode], rootDir, config));
         }
 
         return { matched: true, nodes: result };
@@ -162,7 +180,7 @@ const transformer = (ast: Array<Token>) => {
     // block_rulesにマッチしなかった場合は通常の処理
     const children = node.children;
     if (children) {
-      const transformedChildren = transformer(children);
+      const transformedChildren = transformer(children, rootDir, config);
       transformedAst.push({ ...node, children: transformedChildren });
     } else if (node.type === "text" && node.value) {
       const transformedNodes = transformInlineRules(node);

@@ -1,4 +1,4 @@
-import { defineConfig } from "../../dist/config.js";
+import { defineConfig } from "../../dist/index.js";
 
 export default defineConfig({
   site: {
@@ -10,7 +10,8 @@ export default defineConfig({
   paths: {
     postsDir: "posts",
     outputDir: "dist",
-    templateDir: "../../templates/minimal",
+    templateDir: "templates/minimal",
+    customSyntaxFile: "mitarashi.syntax.json",
   },
 
   theme: {
