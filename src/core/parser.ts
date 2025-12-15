@@ -193,12 +193,41 @@ const parser = (markdown: string) => {
     } else if (!line) {
       part_ast = [];
     } else {
+      // paragraph処理 - 連続する通常の行を1つのparagraphにまとめる
+      const paragraph_lines: string[] = [];
+      let k = 0;
+      for (k; i + k < lines.length; k++) {
+        const currentLine = lines[i + k];
+        // 空白行、heading、list、quote、tableで終了
+        if (
+          !currentLine ||
+          currentLine.startsWith("#") ||
+          currentLine.startsWith("- ") ||
+          currentLine.startsWith("> ") ||
+          currentLine.match(/^\|([^|]*\|)+$/)
+        ) {
+          break;
+        }
+        paragraph_lines.push(currentLine);
+      }
+
+      // paragraph_linesをchildrenに変換（softbreakを挟む）
+      const children: Array<Token> = [];
+      paragraph_lines.forEach((line, idx) => {
+        children.push(..._parser(line));
+        // 最後の行以外にはsoftbreakを追加
+        if (idx < paragraph_lines.length - 1) {
+          children.push({ type: "softbreak" });
+        }
+      });
+
       part_ast = [
         {
           type: "paragraph",
-          children: _parser(line),
+          children: children,
         },
       ];
+      i += k;
     }
 
     ast.push(...part_ast);
