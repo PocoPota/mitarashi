@@ -24,15 +24,17 @@ export interface MitarashiConfig {
 
 export type CustomSyntaxRule =
   | {
-      rule_type: "inline";
-      pattern: string;
+      rule_type: "block";
+      start: string;
+      end: string;
+      meta?: string;
       toNode: {
         type: string;
       };
       template: string;
     }
   | {
-      rule_type: "block";
+      rule_type: "inline";
       start: string;
       end: string;
       meta?: string;

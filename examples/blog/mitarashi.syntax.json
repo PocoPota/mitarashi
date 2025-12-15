@@ -1,11 +1,12 @@
 [
   {
     "rule_type": "inline",
-    "pattern": "/::(.+?)::/",
+    "start": "::",
+    "end": "::",
     "toNode": {
-      "type": "custom_inline"
+      "type": "yellow_marker"
     },
-    "template": "<span class='custom-inline'>{{$0}}</span>"
+    "template": "<span class='yellow_marker'>{{content}}</span>"
   },
   {
     "rule_type": "block",
@@ -14,16 +15,16 @@
     "toNode": {
       "type": "comment_block"
     },
-    "template": "<div class='comment-block'>{{$0}}</div>"
+    "template": "<div class='comment-block'>{{content}}</div>"
   },
   {
     "rule_type": "block",
-    "start": "<<<",
-    "end": ">>>",
+    "start": "!!",
+    "end": "!!",
     "meta": "info",
     "toNode": {
       "type": "info_block"
     },
-    "template": "<div class='info-block'><strong>{{$0}}</strong><div>{{content}}</div></div>"
+    "template": "<div class='info-block'><strong>{{meta}}</strong><div>{{content}}</div></div>"
   }
 ]

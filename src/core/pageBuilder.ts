@@ -14,8 +14,7 @@ export async function pageBuilder(markdownPath: string, config: MitarashiConfig,
     // 記事情報
     const ast = parser(parsed.content);
     const transformedAst = astTransformer(ast, rootDir, config);
-    const contentHtml = generator(transformedAst);
-    // const contentHtml = generator(parser(parsed.content));
+    const contentHtml = generator(transformedAst, rootDir, config);
     const title = parsed.data.title;
     const date = parsed.data.date;
 

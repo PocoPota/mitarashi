@@ -1,6 +1,17 @@
 import type { Token } from "./modules/token";
+import type { MitarashiConfig, CustomSyntaxRule } from "../types";
+import fs from "fs";
+import path from "path";
 
-const generator = (ast: Array<Token>) => {
+const generator = (ast: Array<Token>, rootDir: string, config: MitarashiConfig) => {
+  // カスタム構文ルールの読み込み
+  const rules_file = config.paths.customSyntaxFile
+    ? path.resolve(rootDir, config.paths.customSyntaxFile)
+    : null;
+  const rules_data: Array<CustomSyntaxRule> = rules_file
+    ? JSON.parse(fs.readFileSync(rules_file, "utf-8"))
+    : [];
+
   const _generator = (tokens: Array<Token>) => {
     const type_text = (token: Token) => {
       return token && token.value;
@@ -109,6 +120,30 @@ const generator = (ast: Array<Token>) => {
       return html;
     };
 
+    // カスタム構文のテンプレート処理関数
+    const processTemplate = (template: string, token: Token, children: string | undefined) => {
+      let result = template;
+
+      // {{content}} を置換
+      if (children !== undefined) {
+        result = result.replace(/\{\{content\}\}/g, children);
+      }
+
+      // {{meta}} を置換
+      if (token.meta !== undefined) {
+        result = result.replace(/\{\{meta\}\}/g, token.meta);
+      }
+
+      return result;
+    };
+
+    const createCustomHandler = (rule: CustomSyntaxRule) => {
+      return (token: Token) => {
+        const children = token.children && _generator(token.children);
+        return processTemplate(rule.template, token, children);
+      };
+    };
+
     let html = "";
 
     for (let i = 0; i < tokens.length; i++) {
@@ -132,6 +167,11 @@ const generator = (ast: Array<Token>) => {
         table_row: type_table_row,
         table_cell: type_table_cell,
       };
+
+      // カスタム構文のハンドラーを追加
+      for (const rule of rules_data) {
+        handlers[rule.toNode.type] = createCustomHandler(rule);
+      }
 
       const token_type = tokens[i].type;
       if (handlers[token_type]) {

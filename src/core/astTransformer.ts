@@ -31,7 +31,7 @@ const transformer = (
     if (node.type !== "text" || !node.value) return [node];
 
     for (const rule of inline_rules) {
-      const pattern = new RegExp(rule.pattern);
+      const pattern = new RegExp(rule.start + "(.*?)" + rule.end);
       const isMatch = node.value.match(pattern);
       if (isMatch) {
         const before = node.value.slice(0, isMatch.index);
