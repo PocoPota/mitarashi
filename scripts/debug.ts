@@ -2,13 +2,16 @@ import parser from "../src/core/parser";
 import astTransformer from "../src/core/astTransformer";
 
 const markdown = `
-**This is bold.**わーい**Hello**
+:::
+文章1
+文章2
+:::
+別の段落
 
-// ::inline custom syntax::あああ
-
-:: warning
-This is a warning box.
-::
+<<< info
+これは情報ボックス
+>>>
+やっほー
 `;
 
 const ast = parser(markdown);
