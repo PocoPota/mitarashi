@@ -79,6 +79,15 @@ const generator = (ast: Array<Token>, rootDir: string, config: MitarashiConfig) 
       return html;
     };
 
+    const type_code_block = (token: Token) => {
+      const code = token.value || "";
+      const lang = token.meta || "";
+      const className = lang ? ` class="language-${lang}"` : "";
+
+      const html = `<pre><code${className}>${code}</code></pre>`;
+      return html;
+    };
+
     const type_inlinequote = (token: Token) => {
       const children = token.children && _generator(token.children);
 
@@ -161,6 +170,7 @@ const generator = (ast: Array<Token>, rootDir: string, config: MitarashiConfig) 
         link: type_link,
         image: type_image,
         code_inline: type_code_inline,
+        code_block: type_code_block,
         inlinequote: type_inlinequote,
         blockquote: type_blockquote,
         table: type_table,

@@ -76,7 +76,27 @@ const parser = (markdown: string) => {
   while (i < lines.length) {
     const line = lines[i];
     let part_ast: Array<Token> = [];
-    if (line.startsWith("#")) {
+    if (line.startsWith("```")) {
+      // code block 処理
+      const lang = line.slice(3).trim(); // 言語指定を取得
+      const code_lines: string[] = [];
+      let k = 1;
+      // 次の```を探す
+      for (k; i + k < lines.length; k++) {
+        if (lines[i + k].startsWith("```")) {
+          break;
+        }
+        code_lines.push(lines[i + k]);
+      }
+      part_ast = [
+        {
+          type: "code_block",
+          value: code_lines.join("\n"),
+          meta: lang || undefined,
+        },
+      ];
+      i += k + 1; // 終了の```の次の行へ
+    } else if (line.startsWith("#")) {
       // heading 処理
       const part_string = line.split(" ");
       for (let j = 0; j < part_string[0].length; j++) {
@@ -198,13 +218,14 @@ const parser = (markdown: string) => {
       let k = 0;
       for (k; i + k < lines.length; k++) {
         const currentLine = lines[i + k];
-        // 空白行、heading、list、quote、tableで終了
+        // 空白行、heading、list、quote、table、code blockで終了
         if (
           !currentLine ||
           currentLine.startsWith("#") ||
           currentLine.startsWith("- ") ||
           currentLine.startsWith("> ") ||
-          currentLine.match(/^\|([^|]*\|)+$/)
+          currentLine.match(/^\|([^|]*\|)+$/) ||
+          currentLine.startsWith("```")
         ) {
           break;
         }
