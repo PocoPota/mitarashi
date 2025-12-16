@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node --import tsx/esm
 
-import { buildSite } from "../dist/core/compiler.js";
+import { buildSite } from "../dist/src/core/compiler.js";
 import path from "path";
 
 const targetDir = process.argv[2] || process.cwd();
