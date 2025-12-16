@@ -2,7 +2,6 @@ export interface MitarashiConfig {
   site: {
     siteTitle: string;
     description?: string;
-    baseUrl?: string;
   };
 
   paths: {

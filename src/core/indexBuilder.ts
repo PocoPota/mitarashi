@@ -6,7 +6,6 @@ import type { MitarashiConfig } from "../types";
 export async function indexBuilder(markdownFiles: string[],config: MitarashiConfig, rootDir: string) {
   const outputRoot = path.resolve(rootDir, config.paths.outputDir);
   const postsDir = path.resolve(rootDir, config.paths.postsDir);
-  const baseUrl = config.site.baseUrl || "/";
 
   // フロントマターを解析して一覧データを生成
   const posts = await Promise.all(
@@ -22,9 +21,8 @@ export async function indexBuilder(markdownFiles: string[],config: MitarashiConf
         .replace(/\.md$/, ".html")
         .split(path.sep)
         .join("/");
-      const href = baseUrl.endsWith("/")
-        ? `${baseUrl}${relativePath}`
-        : `${baseUrl}/${relativePath}`;
+      // 相対パスとして生成
+      const href = `./${relativePath}`;
 
       return { title, date: date, href };
     })
@@ -61,8 +59,11 @@ export async function indexBuilder(markdownFiles: string[],config: MitarashiConf
     config.theme.layout
   );
   const layoutTemplate = await fs.readFile(layoutTemplatePath, "utf-8");
+  // index.html自身からindex.htmlへのパス
+  const pathToIndex = "index.html";
   const pageHtml = layoutTemplate
     .replaceAll("{{ siteTitle }}", config.site.siteTitle || "my site")
+    .replaceAll("{{ pathToIndex }}", pathToIndex)
     .replaceAll("{{ slot }}", indexHtml);
 
   await fs.mkdir(outputRoot, { recursive: true });
